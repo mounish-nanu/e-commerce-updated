@@ -52,7 +52,12 @@ public class UserServiceImpl implements UserService {
         }
         boolean matches = bCryptPasswordEncoder.matches(user.getPassword(), newUser.getPassword());
         if (matches) {
-            return createJwtToken(newUser.getId(), newUser.getEmail());
+            String token =  createJwtToken(newUser.getId(), newUser.getEmail());
+            Sessions session = new Sessions();
+            session.setUser(newUser);
+            session.setToken(token);
+            sessionsRepository.save(session);
+            return token;
         }
         else {
 //            List<Sessions> userSessions = sessionsRepository.findAllByUserEmail(user.getEmail());
