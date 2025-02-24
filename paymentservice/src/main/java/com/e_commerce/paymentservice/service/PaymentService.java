@@ -6,11 +6,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PaymentService {
+    private final PaymentGatewayStrategy paymentGatewayStrategy;
+
+    public PaymentService(PaymentGatewayStrategy paymentGatewayStrategy) {
+        this.paymentGatewayStrategy = paymentGatewayStrategy;
+    }
     public String createpaymentlink(Long orderid){
 //        assume we already have oder object
         Long price = 123L;
-        PaymentGatewayAdapter paymentGatewayAdapter = PaymentGatewayStrategy.getpaymentstrategy();
-        String url = paymentGatewayAdapter.createpaymentlink(price);
+        PaymentGatewayAdapter paymentGatewayAdapter = paymentGatewayStrategy.getpaymentstrategy();
+
+        String url = "";
+        try{
+            url = paymentGatewayAdapter.createpaymentlink(price);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return url;
 
     }
