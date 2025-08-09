@@ -2,9 +2,12 @@ package com.e_commerce.productservice.controllers;
 
 import com.e_commerce.productservice.models.Product;
 import com.e_commerce.productservice.services.DatabaseProductService;
-import com.e_commerce.productservice.services.DatabaseProductServiceImpl;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -13,14 +16,33 @@ import java.util.List;
 public class ProductController {
     private final DatabaseProductService databaseProductService;
 
-    public ProductController(@Qualifier("DatabaseProductServiceImpl") DatabaseProductServiceImpl databaseProductServiceImpl
-    , DatabaseProductService databaseProductService) {
+    public ProductController(@Qualifier("DatabaseProductServiceImpl") DatabaseProductService databaseProductService) {
         this.databaseProductService = databaseProductService;
     }
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable int id) {
         return databaseProductService.getProduct(id);
     }
+//@GetMapping("/{id}")
+//public ResponseEntity<Product> getProductById(
+//        @PathVariable int id,
+//        @RequestHeader(value = "Authorization", required = false) String authHeader) {
+//
+//    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or invalid Authorization header");
+//    }
+//
+//    String token = authHeader.substring(7); // drop "Bearer "
+//    try {
+//        Claims claims = JwtUtil.validateTokenAndGetClaims(token);
+//        // Optional: use claims (e.g., tenant, roles, subject)
+//        // String user = claims.getSubject();
+//        Product product = databaseProductService.getProduct(id);
+//        return ResponseEntity.ok(product);
+//    } catch (JwtException ex) { // covers expired/invalid signature/etc.
+//        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token");
+//    }
+//}
     @GetMapping
     public List<Product> getAllProducts(){
         return databaseProductService.getProducts();

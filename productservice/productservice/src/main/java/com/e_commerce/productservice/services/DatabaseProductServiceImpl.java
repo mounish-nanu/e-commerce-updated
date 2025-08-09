@@ -3,7 +3,6 @@ package com.e_commerce.productservice.services;
 import com.e_commerce.productservice.exceptions.NotFoundException;
 import com.e_commerce.productservice.models.Product;
 import com.e_commerce.productservice.repositories.ProductRepository;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,25 +13,16 @@ import java.util.Optional;
 public class DatabaseProductServiceImpl implements DatabaseProductService {
 
     private final ProductRepository productRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
 
-    public DatabaseProductServiceImpl(ProductRepository productRepository,
-                                      RedisTemplate<String, Object> redisTemplate) {
+
+    public DatabaseProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getProduct(int id) {
-        Optional<Product> product1 = (Optional<Product>)redisTemplate.opsForHash().get("PRODUCTS",id);
-        if (product1.isPresent()) {
-            return product1.orElse(null);
-        }
-        else {
             Optional<Product> product = productRepository.findById(id);
-            redisTemplate.opsForHash().put("PRODUCTS",id,product);
             return product.orElse(null);
-        }
     }
     public List<Product> getProducts() {
         return productRepository.findAll();

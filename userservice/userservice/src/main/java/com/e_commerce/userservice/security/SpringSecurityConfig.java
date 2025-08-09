@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -78,11 +79,15 @@ public class SpringSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // If you need CSRF disabled
                 .authorizeHttpRequests((authorize) -> authorize
+//                        .requestMatchers("/products", "/products/**").permitAll()
+                        .requestMatchers( "/users/login", "/users/register").permitAll()
+                        .requestMatchers("/products/public/**").permitAll()
                         .requestMatchers("/public/**").permitAll()  // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()  // Auth endpoints if needed
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .formLogin(AbstractHttpConfigurer::disable)    // disables HTML login form
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

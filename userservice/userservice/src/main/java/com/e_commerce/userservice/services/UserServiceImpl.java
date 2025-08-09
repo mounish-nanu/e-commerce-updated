@@ -8,11 +8,13 @@ import com.e_commerce.userservice.models.User;
 import com.e_commerce.userservice.repositories.SessionsRepository;
 import com.e_commerce.userservice.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +26,10 @@ public class UserServiceImpl implements UserService {
     public UserRepository userRepository;
     public SessionsRepository sessionsRepository;
     public BCryptPasswordEncoder bCryptPasswordEncoder;
-    private SecretKey key = Jwts.SIG.HS256.key().build();
+//    private SecretKey key = Jwts.SIG.HS256.key().build();
+    private static final String SECRET = "your-very-long-secret-key-which-has-32-bytes!";
+
+    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
 
     public UserServiceImpl(UserRepository userRepository,

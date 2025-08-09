@@ -18,12 +18,12 @@ public class ProductserviceApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Product product1 = new Product();
-		product1.setName("Iphone");
-		product1.setPrice(80000);
-		product1.setCategory("Mobiles");
-		product1.setDescription("good mobiles");
-		productRepository.save(product1);
+//		Product product1 = new Product();
+//		product1.setName("Iphone");
+//		product1.setPrice(80000);
+//		product1.setCategory("Mobiles");
+//		product1.setDescription("good mobiles");
+//		productRepository.save(product1);
 
 	}
 

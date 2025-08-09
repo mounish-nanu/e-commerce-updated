@@ -6,6 +6,7 @@ import com.e_commerce.userservice.dtos.LoginResponseDto;
 import com.e_commerce.userservice.dtos.RequestStatus;
 import com.e_commerce.userservice.models.User;
 import com.e_commerce.userservice.services.UserService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -13,7 +14,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -21,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("users")
+    @PostMapping("/register")
     public String addUser(@RequestBody User user) throws UserAlreadyExistsException {
 
         try{
@@ -32,14 +33,14 @@ public class UserController {
 
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody User user) {
         try {
             String token = userService.loginUser(user);
             LoginResponseDto loginResponseDto = new LoginResponseDto();
             loginResponseDto.setRequestStatus(RequestStatus.SUCCESS);
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-            map.add("AUTH_TOKEN", token);
+            map.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
             ResponseEntity<LoginResponseDto> responseEntity = new ResponseEntity<>(loginResponseDto, map, HttpStatus.OK);
             return responseEntity;
         }catch(Exception e){
@@ -50,7 +51,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("logout/{token}")
+    @PostMapping("/logout/{token}")
     public String logout(@PathVariable String token) {
         return userService.deleteSession(token);
     }
