@@ -3,6 +3,7 @@ package com.e_commerce.userservice.services;
 import com.e_commerce.userservice.Exceptions.UserAlreadyExistsException;
 import com.e_commerce.userservice.Exceptions.UserNotFoundException;
 import com.e_commerce.userservice.Exceptions.WrongPasswordException;
+import com.e_commerce.userservice.dtos.UserDto;
 import com.e_commerce.userservice.models.Sessions;
 import com.e_commerce.userservice.models.User;
 import com.e_commerce.userservice.repositories.SessionsRepository;
@@ -91,5 +92,11 @@ public class UserServiceImpl implements UserService {
     public String deleteSession(String token) {
         sessionsRepository.deleteByToken(token);
         return "Session with token " + token + " deleted successfully";
+    }
+
+    public UserDto getById(Long id) {
+        return userRepository.findById(id)
+                .map(UserDto::from)
+                .orElseThrow(() -> new RuntimeException("User not found: " + id));
     }
 }

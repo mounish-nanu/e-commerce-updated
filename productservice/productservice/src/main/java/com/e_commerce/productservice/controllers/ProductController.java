@@ -1,7 +1,10 @@
 package com.e_commerce.productservice.controllers;
 
+import com.e_commerce.productservice.client.UserClient;
+import com.e_commerce.productservice.dtos.UserDto;
 import com.e_commerce.productservice.models.Product;
 import com.e_commerce.productservice.services.DatabaseProductService;
+import com.e_commerce.productservice.services.ProductFacade;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -16,8 +19,12 @@ import java.util.List;
 public class ProductController {
     private final DatabaseProductService databaseProductService;
 
-    public ProductController(@Qualifier("DatabaseProductServiceImpl") DatabaseProductService databaseProductService) {
+    private final ProductFacade productFacade;
+
+    public ProductController(@Qualifier("DatabaseProductServiceImpl") DatabaseProductService databaseProductService,
+                             ProductFacade productFacade) {
         this.databaseProductService = databaseProductService;
+        this.productFacade = productFacade;
     }
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable int id) {
@@ -61,4 +68,21 @@ public class ProductController {
     public String createProduct(@RequestBody Product product){
         return databaseProductService.createProduct(product);
     }
+
+    @GetMapping("/{productId}/users/{userId}")
+    public ResponseEntity<?> userInfoForProduct(
+            @PathVariable Long productId,
+            @PathVariable Long userId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Missing Authorization header");
+        }
+
+        UserDto user = productFacade.fetchUser(userId, authHeader); // pass it down
+        return ResponseEntity.ok(user);
+
+    }
+
+
 }

@@ -29,6 +29,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        request.setAttribute("AUTH_HEADER", authHeader);
+
         try {
             String token = authHeader.substring(7); // remove "Bearer "
             Claims claims = JwtUtil.validateTokenAndGetClaims(token);

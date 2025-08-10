@@ -84,10 +84,11 @@ public class SpringSecurityConfig {
                         .requestMatchers("/products/public/**").permitAll()
                         .requestMatchers("/public/**").permitAll()  // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()  // Auth endpoints if needed
+                                 .requestMatchers("/users/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .formLogin(AbstractHttpConfigurer::disable)    // disables HTML login form
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
 
         return http.build();
     }
@@ -148,8 +149,11 @@ public class SpringSecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    public JwtDecoder jwtDecoder() {
+        var key = new javax.crypto.spec.SecretKeySpec("your-very-long-secret-key-which-has-32-bytes!".getBytes(), "HmacSHA256");
+        return org.springframework.security.oauth2.jwt.NimbusJwtDecoder
+                .withSecretKey(key)
+                .build();
     }
 
     @Bean

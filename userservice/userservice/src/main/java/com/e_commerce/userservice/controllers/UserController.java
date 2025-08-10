@@ -4,6 +4,7 @@ import com.e_commerce.userservice.Exceptions.UserAlreadyExistsException;
 import com.e_commerce.userservice.Exceptions.WrongPasswordException;
 import com.e_commerce.userservice.dtos.LoginResponseDto;
 import com.e_commerce.userservice.dtos.RequestStatus;
+import com.e_commerce.userservice.dtos.UserDto;
 import com.e_commerce.userservice.models.User;
 import com.e_commerce.userservice.services.UserService;
 import org.springframework.http.HttpHeaders;
@@ -54,5 +55,10 @@ public class UserController {
     @PostMapping("/logout/{token}")
     public String logout(@PathVariable String token) {
         return userService.deleteSession(token);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> get(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 }
