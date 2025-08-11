@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gatewayService" />
+        <module name="orderservice" />
       </profile>
       <profile name="Annotation profile for userservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -33,6 +34,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="gatewayService" options="-parameters" />
+      <module name="orderservice" options="-parameters" />
       <module name="paymentservice" options="-parameters" />
       <module name="productservice" options="-parameters" />
       <module name="userservice" options="-parameters" />

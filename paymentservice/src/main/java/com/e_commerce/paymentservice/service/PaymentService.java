@@ -12,7 +12,7 @@ public class PaymentService {
         this.paymentGatewayStrategy = paymentGatewayStrategy;
     }
     public String createpaymentlink(Long orderid){
-//        assume we already have oder object
+//        assume we already have order object
         Long price = 123L;
         PaymentGatewayAdapter paymentGatewayAdapter = paymentGatewayStrategy.getpaymentstrategy();
 
