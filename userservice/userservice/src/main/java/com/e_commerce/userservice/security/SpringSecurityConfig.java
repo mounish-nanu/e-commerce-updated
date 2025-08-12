@@ -82,6 +82,12 @@ public class SpringSecurityConfig {
 //                        .requestMatchers("/products", "/products/**").permitAll()
                         .requestMatchers( "/users/login", "/users/register").permitAll()
                         .requestMatchers("/products/public/**").permitAll()
+                                .requestMatchers(
+                                        "/actuator/health",
+                                        "/actuator/info",
+                                        "/actuator/prometheus"
+                                ).permitAll()
+                                .requestMatchers("/error").permitAll()
                         .requestMatchers("/public/**").permitAll()  // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()  // Auth endpoints if needed
                                  .requestMatchers("/users/**").authenticated()

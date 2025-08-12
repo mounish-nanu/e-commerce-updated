@@ -33,6 +33,10 @@ public class SecurityConfig {
 
         http.authorizeExchange(auth -> auth
                 .pathMatchers("/actuator/health").permitAll()
+                .pathMatchers(
+                        "/actuator/info",
+                        "/actuator/prometheus"
+                ).permitAll()
                 .pathMatchers("/api/users/login", "/api/users/register", "/api/auth/**").permitAll()
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyExchange().authenticated()

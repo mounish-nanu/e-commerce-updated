@@ -1,0 +1,22 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+
+processors:
+  batch: {}
+
+exporters:
+  otlp:
+    endpoint: http://tempo:4318
+    tls:
+      insecure: true
+  logging:
+    loglevel: warn
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp, logging]
